@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="socket.io/socket.io.js"></script>
+    <link rel="stylesheet" type="text/css" href="index.css" >
+    <!--    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
+    <!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script> -->
+    <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.4.1.js"  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="  crossorigin="anonymous"></script>
+    <!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script> -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <title>Login Page</title>
+</head>
+<body>
+   
+    
+    <div class="wrapper fadeInDown" id="login-area">
+      <div id="formContent">
+        <!-- Tabs Titles -->
+    
+        <!-- Icon -->
+        <div class="fadeIn first">
+          <p class="text-center mt-2 mb-2 text-large font-weight-bold h3">Login Here</p>
+        </div>
+    
+        <!-- Login Form -->
+        <form id="Login-form">
+          <input type="text" id="login" class="fadeIn second" name="login" placeholder="login" autocomplete="off">
+          <input type="submit" class="fadeIn fourth" value="Log In">
+        </form>
+    
+      </div>
+      
+    </div>
+    <div id="chat-area" >
+        <div class="container">
+            <h3 class=" text-center">Messaging</h3>
+            <div class="messaging">
+                  <div class="inbox_msg">
+                    <div class="inbox_people">
+                      <div class="headind_srch">
+                        <div class="recent_heading">
+                          <h4>Online Users</h4>
+                        </div>
+                        <div class="srch_bar">
+                          <div class="stylish-input-group">
+                            <input type="text" id="myInput" class="search-bar"  placeholder="Search" >
+                            <span class="input-group-addon">
+                            <button type="button" onclick="searchFunction()"> <i class="fa fa-search" aria-hidden="true"></i> </button>
+                            </span> </div>
+                        </div>
+                      </div>
+                      <div class="inbox_chat" id="usersname">
+                      </div>
+                    </div>
+                    <div class="mesgs">
+                      <div class="msg_history">
+                        <div class="incoming_msg">
+                          <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                          <div class="received_msg">
+                              <h6>User name</h6>
+                            <div class="received_withd_msg">
+                              <p>Test which is a new approach to have all
+                                solutions</p>
+                              <span class="time_date"> 11:01 AM    |    June 9</span></div>
+                          </div>
+                        </div>
+                       
+                       
+                      </div>
+                      <div class="type_msg">
+                        <div class="input_msg_write">
+                          <input type="text" id="typed_msg" class="write_msg" placeholder="Type a message" />
+                          <button class="msg_send_btn"  type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  
+                  <p class="text-center top_spac"> Design by <a target="_blank" href="#">Aniket Gupta</a></p>
+                  
+                </div></div>
+    </div>
+</body>
+<script>
+    var socket = io();
+    var d = new Date();
+    d1=d.toDateString().split(" ")
+    console.log(d1)
+    console.log(d.getHours(),d.getMinutes())
+
+    function searchFunction() {
+        var input, filter, ul, li, a, i, txtValue,searc;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        // console.log(filter)
+        ul = document.getElementById("usersname");
+        console.log(ul)
+        searc= ul.getElementsByClassName("chat_list");
+        console.log(searc)
+        li = ul.getElementsByClassName("chat_ib");
+        console.log(li)
+       
+        // searc[0].remove()
+        // console.log(li)
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("h5")[0];
+            txtValue = a.firstChild
+            txtValue = txtValue.textContent
+            console.log(txtValue)
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                searc[i].style.display = "";
+            } else {
+                searc[i].style.display = "none";
+            }
+        }
+    }
+
+
+    function updateuser(data){
+        for( var i in data.userlist){
+                    console.log(data.userlist[i])
+                    $("#usersname").append(`<div class="chat_list">
+                            <div class="chat_people">
+                            <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                            <div class="chat_ib">
+                              <h5>`+ data.userlist[i] + `<span class="chat_date">`+ d1[1] +` `+ d1[2] +`</span></h5>
+                              <p>Test, which is a new approach to have all solutions 
+                                astrology under one roof.</p>
+                            </div>
+                          </div>
+                          </div>`);
+                }
+    }
+
+   
+    $("#Login-form").submit(function(event){
+        var login = $("#login").val()
+        // console.log(login)
+        event.preventDefault();
+        if($("#login").val() =="" || $("#login").val() == " "){
+            alert("Invail Username");
+        } else{
+            $username = $("#login").val()
+            socket.emit("has connected", $username);
+            $("#login-area").hide();
+            $("#chat-area").show();
+            $(".msg_history").html("");
+            
+            socket.on("has connected",function(data){
+                $("#usersname").html("");
+                $(".msg_history").append('<div class="received_withd_msg"><p><b>' + data.username + '</b> has connected</p></div>') 
+                
+                updateuser(data);
+            });
+            socket.on("has disconnected",function(data){
+                $("#usersname").html("")
+                $(".msg_history").append('<div class="received_withd_msg"><p><b>' + data.username + '</b> has disconnected</p></div>') 
+
+                updateuser(data);
+               
+            })
+            $(".msg_send_btn").click(function(){ 
+                if($("#typed_msg").val() =="" || $("#typed_msg").val() == " "){
+                    alert("Cannot send empty text");
+                }
+                else{
+                   
+                    console.log("working",$("#typed_msg").val())
+                    socket.emit("new message",{username:$username,message:$("#typed_msg").val()});
+                    $("#typed_msg").val("")
+                }
+            });
+
+            socket.on("new message",function(data){
+                $(".msg_history").append(`<div class="incoming_msg">
+                          <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                          <div class="received_msg">
+                              <h6>`+data.username+`</h6>
+                            <div class="received_withd_msg">
+                              <p>`+ data.message +`</p>
+                              <span class="time_date">`+ d.getHours() +`:`+ d.getMinutes() +` | `+ d1[1]+` `+ d1[2] +`</span></div>
+                          </div>
+                        </div>`)
+            })
+        }
+    });
+
+</script>
+</html>
